@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0 user-scalable=no"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Slice Credit Card Statement</title>
+    <style>
+      :root {
+        --brand-start: #d41d78;
+        --brand-end: #a3155a;
+        --bg: #f9f9f9;
+        --section-separator: #f6f7f8; /* bar between sections */
+        --text: #1f2937;
+        --muted: #6b7280;
+        --divider: #eeeeef;
+        --card: #ffffff;
+        --success: #16a34a;
+        --orange: #ff7a2b;
+        --black: #232f3e;
+        --green: #2bb673;
+        --radius: 16px;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --text-heading: rgba(255, 255, 255, 0.9);
+        --card-number: rgba(255, 255, 255, 0.4);
+        --k: rgba(255, 255, 255, 0.7);
+        --label: rgba(0, 0, 0, 0.9);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Rubik", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .statement {
+        width: 360px;
+        max-width: 360px;
+        margin:  auto;
+        background: var(--card);
+        /* border-radius: var(--radius); */
+        /* overflow: hidden; */
+        /* box-shadow: var(--shadow); */
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--brand-start),
+          var(--brand-end)
+        );
+        color: #fff;
+        padding: 24px 18px 18px 18px;
+      }
+
+      .logo {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        margin-bottom: 18px;
+      }
+
+      .card-number-container {
+        display: flex;
+        width: 312px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .title {
+        color: var(--text-heading);
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 24px; /* 120% */
+        letter-spacing: 0.4px;
+      }
+      .card-number {
+        color: var(--card-number);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 16px; /* 133.333% */
+        letter-spacing: 0.24px;
+        margin-bottom: 20px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .col {
+        flex: 1;
+      }
+      .k {
+        color: var(--k);
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1rem; /* 133.333% */
+        letter-spacing: 0.015rem;
+      }
+      .v-lg {
+        color: var(--text-heading);
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 2rem; /* 133.333% */
+        letter-spacing: 0.03rem;
+      }
+      .v-sm {
+        font-size: 18px;
+        font-weight: 800;
+      }
+      .date-v {
+        color: var(--text-heading);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5rem; /* 150% */
+        letter-spacing: 0.02rem;
+      }
+
+      .section-separator {
+        height: 8px;
+        background: var(--section-separator);
+      }
+
+      .section-card {
+        background: #fff;
+        border-radius: 0; /* flush with separator bars like original screenshot */
+        overflow: hidden;
+      }
+
+      .section-header {
+        padding: 20px 26px 10px 24px; /* align with 24px horizontal spacing */
+        font-size: 1.3rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 1.5rem; /* 120% */
+        letter-spacing: 0.025rem;
+      }
+
+      .list {
+        padding: 6px 24px 12px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 0;
+        width: 312px;
+      }
+      .left {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 800;
+        font-size: 15px;
+        flex: 0 0 34px;
+        overflow: hidden;
+      }
+      .icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .icon:has(img) {
+        background: none;
+        color: transparent;
+      }
+      .icon.swiggy {
+        background: var(--orange);
+      }
+      .icon.amazon {
+        background: var(--black);
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-weight: 700;
+        text-transform: lowercase;
+      }
+      .icon.green {
+        background: var(--green);
+      }
+
+      .meta {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        min-width: 0;
+      }
+      .name {
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1rem; /* 133.333% */
+        letter-spacing: 0.015rem;
+      }
+      .sub {
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1rem; /* 133.333% */
+        letter-spacing: 0.015rem;
+        color: rgba(0, 0, 0, 0.4);
+      }
+
+      .amount {
+        text-align: right;
+      }
+
+      .value.success {
+        color: var(--success);
+      }
+      .note {
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1rem; /* 133.333% */
+        letter-spacing: 0.015rem;
+        color: rgba(0, 0, 0, 0.4);
+      }
+
+      .summary {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .summary-row {
+        display: flex;
+        padding: 12px 24px;
+        align-items: center;
+        gap: 0.75rem;
+        align-self: stretch;
+      }
+
+      .summary .label {
+        align-self: stretch;
+        color: var(--label);
+        font-size: 1.1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5rem;
+        letter-spacing: 0.02rem;
+        flex: 1;
+      }
+      .summary .value {
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.5rem; /* 150% */
+        letter-spacing: 0.02rem;
+        color: var(--label);
+      }
+      .summary .value.success {
+        color: var(--success);
+      }
+
+      .monies-section .value:not([data-negative])::before {
+        content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="13" viewBox="0 0 10 13" fill="none"><path d="M5.375 0.512695C6.58174 0.512695 7.71532 0.956183 8.56055 1.76367C9.41067 2.57122 9.875 3.65443 9.875 4.80273C9.87496 5.95565 9.40575 7.03429 8.56055 7.8418L8.55566 7.8457C7.706 8.6482 6.58622 9.10659 5.40234 9.1123V9.11426H3.02441C3.15144 9.40358 3.33781 9.66977 3.57715 9.89844C4.05592 10.3557 4.69604 10.6074 5.38477 10.6074H5.65918C6.17329 10.6077 6.58981 11.0249 6.58984 11.5391C6.58984 12.0534 6.17258 12.4707 5.6582 12.4707H5.37305V12.4688C4.19649 12.4659 3.04169 12.033 2.18945 11.2188C1.33947 10.4113 0.875111 9.32879 0.875 8.18066C0.875 7.66506 1.29299 7.24707 1.80859 7.24707H5.37988C6.05403 7.24707 6.69894 6.97785 7.19238 6.52051C7.66621 6.06314 7.93056 5.45632 7.93066 4.80762C7.93066 4.15414 7.66626 3.54729 7.1875 3.08984C6.70869 2.63239 6.06878 2.37988 5.37988 2.37988C4.24059 2.37993 3.43957 3.05236 2.89941 4.12695L2.71387 4.51465C2.53203 4.89304 2.11727 5.10215 1.70508 5.02344C1.19791 4.92637 0.869733 4.43198 0.976562 3.92676L1.00977 3.76855C1.4598 1.94996 3.1971 0.512743 5.375 0.512695Z" fill="black" fill-opacity="0.9"/></svg>');
+        margin-right: 4px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+              .monies-section .value[data-negative]::before {
+          content: "- "
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="13" viewBox="0 0 10 13" fill="none"><path d="M5.375 0.512695C6.58174 0.512695 7.71532 0.956183 8.56055 1.76367C9.41067 2.57122 9.875 3.65443 9.875 4.80273C9.87496 5.95565 9.40575 7.03429 8.56055 7.8418L8.55566 7.8457C7.706 8.6482 6.58622 9.10659 5.40234 9.1123V9.11426H3.02441C3.15144 9.40358 3.33781 9.66977 3.57715 9.89844C4.05592 10.3557 4.69604 10.6074 5.38477 10.6074H5.65918C6.17329 10.6077 6.58981 11.0249 6.58984 11.5391C6.58984 12.0534 6.17258 12.4707 5.6582 12.4707H5.37305V12.4688C4.19649 12.4659 3.04169 12.033 2.18945 11.2188C1.33947 10.4113 0.875111 9.32879 0.875 8.18066C0.875 7.66506 1.29299 7.24707 1.80859 7.24707H5.37988C6.05403 7.24707 6.69894 6.97785 7.19238 6.52051C7.66621 6.06314 7.93056 5.45632 7.93066 4.80762C7.93066 4.15414 7.66626 3.54729 7.1875 3.08984C6.70869 2.63239 6.06878 2.37988 5.37988 2.37988C4.24059 2.37993 3.43957 3.05236 2.89941 4.12695L2.71387 4.51465C2.53203 4.89304 2.11727 5.10215 1.70508 5.02344C1.19791 4.92637 0.869733 4.43198 0.976562 3.92676L1.00977 3.76855C1.4598 1.94996 3.1971 0.512743 5.375 0.512695Z" fill="black" fill-opacity="0.9"/></svg>');
+          margin-right: 4px;
+          display: inline-block;
+          vertical-align: middle;
+        }
+
+        .monies-final-balance .value,
+        .monies-final-balance .label {
+          color: rgba(0, 0, 0, 0.90);
+          text-align: right;
+          font-size: 1rem;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 1.5rem;
+          letter-spacing: 0.02rem;
+        }
+
+      .glossary {
+        padding: 0;
+      }
+      
+      .glossary .section-header {
+        padding: 16px 24px 8px 24px;
+        font-size: 20px;
+        line-height: 24px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.9);
+      }
+
+      .gloss {
+        margin-bottom: 24px;
+        padding: 4px 24px;
+      }
+      
+      .gloss:last-child {
+        margin-bottom: 20px;
+      }
+      
+      .gloss h4 {
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 1.5rem;
+        letter-spacing: 0.02rem;
+        color: rgba(0, 0, 0, 0.9);
+        margin: 0 0 8px 0;
+      }
+      
+      .gloss p {
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1.5rem;
+        letter-spacing: 0.02rem;
+        color: rgba(0, 0, 0, 0.7);
+        margin: 0;
+      }
+
+
+      .touchy .item {
+        transition: background 0.15s ease;
+      }
+      .touchy .item:hover {
+        background: #fafafa;
+      }
+
+      @media (min-width: 360px) {
+        .statement {
+          max-width: 360px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="statement">
+      <header class="header">
+        <div class="logo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="46"
+            height="16"
+            viewBox="0 0 46 16"
+            fill="none"
+          >
+            <path
+              d="M2.21354 15.4799C1.45892 15.1446 0.905539 14.7421 0.553385 14.2893C0.167692 13.8533 0 13.4676 0 13.1323C0 12.9813 0.050308 12.8639 0.150924 12.7801C0.23477 12.6962 0.352155 12.6459 0.486309 12.6459H2.31416C2.43154 12.6459 2.53216 12.713 2.63277 12.8304C2.69985 12.8975 2.88431 13.0316 3.13585 13.2496C3.38739 13.4676 3.68924 13.6521 4.02462 13.7527C4.36001 13.8869 4.71216 13.9539 5.11462 13.9539C5.71832 13.9539 6.18786 13.8366 6.55678 13.6018C6.94247 13.3838 7.11017 13.0484 7.11017 12.6292C7.11017 12.3441 7.02632 12.0926 6.85863 11.8913C6.67416 11.7069 6.37232 11.5392 5.95308 11.3882C5.51708 11.2373 4.84631 11.0696 3.97431 10.8852C2.71662 10.6169 1.79431 10.2144 1.20739 9.66101C0.603693 9.10763 0.301846 8.40332 0.301846 7.48101C0.301846 6.87731 0.486308 6.32393 0.838463 5.78731C1.19062 5.28423 1.72723 4.83146 2.43154 4.49607C3.11908 4.16069 3.95754 4.00977 4.94693 4.00977C5.95308 4.00977 6.80832 4.16069 7.54616 4.47931C8.28401 4.81469 8.8374 5.18361 9.20632 5.63639C9.59202 6.07239 9.75971 6.47485 9.75971 6.81023C9.75971 6.94439 9.7094 7.06177 9.62555 7.14562C9.50817 7.26301 9.40755 7.29654 9.2734 7.29654H7.61324C7.46232 7.29654 7.32817 7.22947 7.22755 7.11208C7.11016 7.045 6.95924 6.89408 6.74124 6.69285C6.4897 6.49162 6.25493 6.34069 5.96986 6.22331C5.68478 6.10593 5.34939 6.03885 4.94693 6.03885C4.39354 6.03885 3.97431 6.15623 3.68924 6.391C3.40416 6.64254 3.25324 6.94439 3.25324 7.33008C3.25324 7.59839 3.32031 7.81639 3.47124 8.00085C3.60539 8.18532 3.89047 8.33624 4.3097 8.48716C4.72893 8.63809 5.38293 8.82255 6.23816 8.97347C8.90448 9.47655 10.2292 10.6672 10.2292 12.4615C10.2292 13.5012 9.79325 14.3732 8.87094 15.0104C7.9654 15.6476 6.67416 15.983 5.04755 15.983C3.89047 15.9998 2.96816 15.8153 2.21354 15.4799Z"
+              fill="white"
+              fill-opacity="0.9"
+            />
+            <path
+              d="M12.1412 15.6122C12.0238 15.4948 11.9902 15.3942 11.9902 15.2265V0.536617C11.9902 0.385693 12.0405 0.251539 12.1412 0.134154C12.2585 0.0503079 12.3592 0 12.5269 0H14.3882C14.5392 0 14.6733 0.0503079 14.7907 0.134154C14.8745 0.251539 14.9249 0.385693 14.9249 0.536617V15.2265C14.9249 15.3774 14.8745 15.4948 14.7907 15.6122C14.6733 15.7296 14.5392 15.7631 14.3882 15.7631H12.5269C12.3592 15.7631 12.2585 15.7296 12.1412 15.6122Z"
+              fill="white"
+              fill-opacity="0.9"
+            />
+            <path
+              d="M17.104 15.6141C16.9867 15.4967 16.9531 15.3961 16.9531 15.2284V5.1333C16.9531 4.98237 17.0034 4.84822 17.104 4.73083C17.2214 4.64699 17.322 4.59668 17.4897 4.59668H19.3847C19.5356 4.59668 19.653 4.64699 19.7704 4.7476C19.8877 4.86499 19.9213 4.9656 19.9213 5.1333V15.2284C19.9213 15.3793 19.871 15.4967 19.7704 15.6141C19.653 15.7315 19.5524 15.765 19.3847 15.765H17.4897C17.322 15.765 17.2214 15.7315 17.104 15.6141Z"
+              fill="white"
+              fill-opacity="0.9"
+            />
+            <path
+              d="M17.7758 2.23308C18.346 2.80323 19.1174 3.15539 19.9894 3.15539V0.0195312H16.8535C16.8535 0.874764 17.2057 1.66292 17.7758 2.23308Z"
+              fill="white"
+              fill-opacity="0.9"
+            />
+            <path
+              d="M23.2912 14.6397C22.3185 13.7342 21.7987 12.4932 21.7316 10.8834L21.7148 9.99461L21.7316 9.10584C21.7987 7.51276 22.3018 6.27183 23.2912 5.34952C24.247 4.44398 25.555 3.99121 27.1816 3.99121C28.3555 3.99121 29.3281 4.19244 30.1498 4.61167C30.9547 5.03091 31.5416 5.51722 31.9441 6.12091C32.3298 6.7246 32.5478 7.29476 32.5646 7.84814C32.5813 7.99907 32.5478 8.11645 32.4304 8.23384C32.313 8.35122 32.1789 8.38476 32.0279 8.38476H30.0492C29.8982 8.38476 29.7641 8.33445 29.697 8.26738C29.6299 8.2003 29.5461 8.08291 29.479 7.91522C29.261 7.36184 28.9759 6.9426 28.607 6.69106C28.2213 6.43953 27.7686 6.30537 27.2152 6.30537C26.4605 6.30537 25.8904 6.55691 25.4544 7.00968C25.0352 7.47922 24.7836 8.2003 24.7669 9.18969L24.7501 10.0114L24.7669 10.7492C24.8507 12.6777 25.6724 13.6335 27.2152 13.6335C27.7853 13.6335 28.2549 13.4994 28.607 13.2479C28.9592 12.9963 29.2442 12.6106 29.479 12.0237C29.5461 11.8728 29.6132 11.7386 29.697 11.6715C29.7641 11.6045 29.8982 11.5542 30.0492 11.5542H32.0279C32.1789 11.5542 32.313 11.6045 32.4304 11.7051C32.5478 11.8057 32.5813 11.9231 32.5646 12.0908C32.5478 12.5939 32.313 13.164 31.9441 13.7509C31.5584 14.3546 30.9715 14.8912 30.1666 15.3105C29.3616 15.7297 28.3722 15.9477 27.1649 15.9477C25.555 15.998 24.247 15.5452 23.2912 14.6397Z"
+              fill="white"
+              fill-opacity="0.9"
+            />
+            <path
+              d="M35.6017 14.5744C34.6291 13.6186 34.1092 12.2938 34.0422 10.533L34.0254 9.97963C34.0254 8.13501 34.5117 6.67608 35.4843 5.60285C36.4402 4.52961 37.7985 4.00977 39.5089 4.00977C41.2697 4.00977 42.6448 4.54638 43.6006 5.60285C44.5565 6.67608 45.026 8.0847 45.026 9.86224V10.3318C45.026 10.4827 44.9757 10.6001 44.8751 10.7175C44.7577 10.8349 44.6236 10.8684 44.4726 10.8684H37.1109V11.0529C37.1277 11.8746 37.3792 12.5621 37.7985 13.0987C38.2177 13.6521 38.8046 13.9204 39.5257 13.9204C40.3642 13.9204 41.0517 13.585 41.5883 12.8975C41.7225 12.7466 41.8399 12.6292 41.9069 12.5789C41.974 12.5621 42.1082 12.5286 42.2926 12.5286H44.2379C44.372 12.5286 44.4894 12.5789 44.59 12.6459C44.6739 12.713 44.7242 12.8304 44.7242 12.9646C44.7242 13.3167 44.5229 13.7359 44.1037 14.2055C43.6845 14.6918 43.064 15.111 42.2759 15.4632C41.5045 15.8153 40.5822 15.9998 39.5425 15.9998C37.8656 15.9998 36.5576 15.5303 35.6017 14.5744ZM41.9572 8.93993C41.9572 8.06793 41.7392 7.36362 41.32 6.827C40.884 6.32393 40.2803 6.05562 39.5257 6.05562C38.7711 6.05562 38.1674 6.32393 37.7482 6.827C37.3289 7.36362 37.1109 8.06793 37.1109 8.93993V8.99024H41.974V8.93993H41.9572Z"
+              fill="white"
+              fill-opacity="0.9"
+            />
+          </svg>
+        </div>
+        <div class="card-number-container">
+          <div class="title">Rajan’s<br />credit card statement</div>
+          <div class="card-number">XXXX XXXX XXXX 1234</div>
+        </div>
+        <div class="row-container">
+          <div class="row" style="margin-bottom: 12px">
+            <div class="col">
+              <div class="k">Total Amount Due</div>
+              <div class="v-lg">₹1,00,000</div>
+            </div>
+            <div class="col" style="text-align: right">
+              <div class="k">Min Amount Due</div>
+              <div class="v-lg">₹5,000</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="k">Due Date</div>
+              <div class="date-v">5 Sep '25</div>
+            </div>
+            <div class="col" style="text-align: right">
+              <div class="k">Statement Period</div>
+              <div class="date-v">21 Jul - 20 Aug</div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <section class="section-card touchy">
+        <div class="section-header">Statement summary</div>
+        <div class="summary">
+          <div class="summary-row">
+            <div class="label">Card and UPI spends</div>
+            <div class="value">₹6,000</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Refunds</div>
+            <div class="value success">₹1,000</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Cashback</div>
+            <div class="value success">₹1,000</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Advance repayments</div>
+            <div class="value success">₹2,000</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Ongoing EMIs</div>
+            <div class="value">₹4,000</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Interest &amp; charges</div>
+            <div class="value">₹500</div>
+          </div>
+          <div class="summary-row">
+            <div class="label">Carry forward from July</div>
+            <div class="value">₹6,000</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy">
+        <div class="section-header">Card and UPI spends</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <span class="icon swiggy">S</span>
+              <div class="meta">
+                <span class="label">Swiggy</span>
+                <span class="sub">7 Jul '25 • UPI</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹3,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <span class="icon swiggy">S</span>
+              <div class="meta">
+                <span class="label">Swiggy</span>
+                <span class="sub">4 Jul '25 • UPI</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹3,000</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy">
+        <div class="section-header">Refunds</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <span class="icon"
+                ><img
+                  src="https://i.pinimg.com/736x/74/c9/14/74c914ebbfc3167a7a8b9c0c7ba6693b.jpg"
+                  alt="Amazon"
+              /></span>
+              <div class="meta">
+                <span class="label">Amazon</span>
+                <span class="sub">3 Jul '25 • UPI</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value success">₹500</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <span class="icon"
+                ><img
+                  src="https://i.pinimg.com/736x/74/c9/14/74c914ebbfc3167a7a8b9c0c7ba6693b.jpg"
+                  alt="Amazon"
+              /></span>
+              <div class="meta">
+                <span class="label">Amazon</span>
+                <span class="sub">3 Jul '25 • UPI</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value success">₹500</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy">
+        <div class="section-header">Cashback</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <span class="icon green">↻</span>
+              <div class="meta">
+                <span class="label">monies redeemed</span>
+                <span class="sub">8 Jul '25</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value success">₹500</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <span class="icon green">↻</span>
+              <div class="meta">
+                <span class="label">monies redeemed</span>
+                <span class="sub">5 Jul '25</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value success">₹500</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy">
+        <div class="section-header">Advance repayments</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <span class="icon green">Q</span>
+              <div class="meta">
+                <span class="label">Repayment</span>
+                <span class="sub">9 Jul '25</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value success">₹1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <span class="icon green">Q</span>
+              <div class="meta">
+                <span class="label">Repayment</span>
+                <span class="sub">6 Jul '25</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value success">₹1,000</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy">
+        <div class="section-header">Ongoing EMIs</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <span class="icon"
+                ><img
+                  src="https://i.pinimg.com/736x/74/c9/14/74c914ebbfc3167a7a8b9c0c7ba6693b.jpg"
+                  alt="Amazon"
+              /></span>
+              <div class="meta">
+                <span class="label">Amazon</span>
+                <span class="sub">3 Jul '25 • UPI</span>
+              </div>
+            </div>
+            <div class="amount">
+              <div class="value">₹1,000</div>
+              <div class="note">EMI 2/3</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <span class="icon"
+                ><img
+                  src="https://i.pinimg.com/736x/74/c9/14/74c914ebbfc3167a7a8b9c0c7ba6693b.jpg"
+                  alt="Amazon"
+              /></span>
+              <div class="meta">
+                <span class="label">Amazon</span>
+                <span class="sub">3 Jul '25 • UPI</span>
+              </div>
+            </div>
+            <div class="amount">
+              <div class="value">₹1,000</div>
+              <div class="note">EMI 2/3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy">
+        <div class="section-header">Interest and charges</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">Finance charges</span>
+                <span class="sub">July statement</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">Finance charges</span>
+                <span class="sub">August spends</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">Surcharge</span>
+                <span class="sub">August spends</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">Late fee</span>
+                <span class="sub">July statement</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">Flat fee</span>
+                <span class="sub">Bank transfers</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy">
+        <div class="section-header">GST details</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">IGST</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">CGST</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">SGST</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">₹1,000</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card touchy monies-section">
+        <div class="section-header">monies</div>
+        <div class="list">
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">Balance as of 21 Jul</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">monies collected</span>
+              </div>
+            </div>
+            <div class="amount"><div class="value">1,000</div></div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">monies redeemed</span>
+              </div>
+            </div>
+            <div class="amount">
+              <div class="value" data-negative>1,000</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="left">
+              <div class="meta">
+                <span class="label">monies reversed</span>
+              </div>
+            </div>
+            <div class="amount">
+              <div class="value" data-negative>1,000</div>
+            </div>
+          </div>
+                     <div class="item monies-final-balance">
+             <div class="left">
+               <div class="meta">
+                 <span class="label">Balance as of 20 Aug</span>
+               </div>
+             </div>
+             <div class="amount"><div class="value">1,000</div></div>
+           </div>
+        </div>
+      </section>
+
+      <div class="section-separator"></div>
+
+      <section class="section-card">
+        <div class="glossary">
+          <div class="section-header">Glossary</div>
+          <div class="gloss">
+            <h4>Payment Obligations</h4>
+            <p>
+              Please ensure that at least the Minimum Amount Due (MAD) is paid
+              by the Due Date. Failure to do so within 3 days of the due date
+              will result in reporting to credit bureaus as a defaulter.
+            </p>
+          </div>
+          <div class="gloss">
+            <p>
+              Please refer to your MITC (Most Important Terms and Conditions)
+              available on slice app or website for details on how your MAD is
+              calculated.
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Finance Charges</h4>
+            <p>
+              If any portion from the total bill due remains unpaid after the
+              payment due date, interest charges may apply following the average
+              daily reducing balance method
+            </p>
+          </div>
+          <div class="gloss">
+            <p>
+              Paying only the minimum amount each month may result in long-term
+              debt with compounded interest and loss of interest-free credit
+              period benefits
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Credit Card Security</h4>
+            <p>
+              To immediately block your card due to loss, theft, or suspicious
+              activity, contact our customer support through the slice app or
+              call on 080 4832 9999.
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Card and UPI spends</h4>
+            <p>
+              All money you spent using your slice credit card or UPI during
+              this statement's billing cycle.
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Refunds</h4>
+            <p>
+              Any transaction refunds or reversals returned to your credit card
+              account.
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Cashback</h4>
+            <p>Any reward money credited to your credit card account.</p>
+          </div>
+          <div class="gloss">
+            <h4>Advance payments</h4>
+            <p>
+              Any advance repayments you made against your credit card balance
+              during this statement's billing cycle are credited to your slice
+              credit card account.
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Ongoing EMIs</h4>
+            <p>
+              Monthly installment payments due for active sliced transactions or
+              any active EMIs on your credit card.
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Interest &amp; charges</h4>
+            <p>
+              Fees applicable on your credit card account for late payments,
+              bank transfers, surcharges, finance charges, etc.
+            </p>
+          </div>
+          <div class="gloss">
+            <h4>Carry forward from July</h4>
+            <p>
+              Any outstanding balance from your previous month's statement that
+              remains unpaid is carried forward.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
